@@ -1,0 +1,167 @@
+/* ==========================================================================
+   FOUNDATIONS — the single source of truth for the design system.
+   Mirrors the Framer project's color styles, text styles, spacing and motion.
+   Change a value here and it updates everywhere (CSS and canvas components).
+
+   Breakpoints (Framer frames): Desktop ≥1200px · Tablet 810–1199px · Phone <810px
+   CSS can't read variables inside @media, so 1199px / 809px are repeated as
+   literals in media queries across the styles — keep them in sync with these.
+   ========================================================================== */
+
+@font-face{font-family:"PP Mondwest";src:url(/assets/mondwest.woff2) format("woff2");font-display:swap}
+
+:root{
+  /* ---------- Colors (Framer color styles) ---------- */
+  --color-white:#fff;            /* White  — page background, text on orange */
+  --color-black:#121212;         /* Black  — primary text */
+  --color-gray:#878787;          /* Gray   — body copy */
+  --color-gray-50:#999;          /* Gray 50 — section labels */
+  --color-gray-light:#a4a4a4;    /* meta labels, sub-headings */
+  --color-orange:#e83a09;        /* Orange — brand, links, footer */
+  --color-blue:#1d21d7;          /* Blue   — list numerals, game bullets */
+  --color-green:#1dde74;         /* Success - Green — positive stats */
+  --color-peach:#ffbeab;         /* copy on orange */
+  --color-hero:#f5f8ff;          /* hero background */
+  /* Hero pixel sky — a scale built on Blue #1D21D7 */
+  --color-sky-deep:#1d21d7;      /* solid cells, accent pixels */
+  --color-sky:#4f54ea;           /* dots & stripes, accent pixels */
+  --color-sky-soft:#6166e8;      /* light fill */
+  /* Work-card pixel clouds — one palette per card, taken from that project's mockup:
+     deep (solid cells + hover fill), base (dots + stripes), soft (light fill) */
+  --color-card-orange-deep:#d83018;  --color-card-orange:#e45a3c;  --color-card-orange-soft:#f0c060; /* Yalamanchili: brand red + gold */
+  --color-card-ink-deep:#121212;     --color-card-ink:#4a4a4a;     --color-card-ink-soft:#b8b8b8;    /* The Hyphen: black type on white */
+  --color-card-yellow-deep:#ffe500;  --color-card-yellow:#e0c200;  --color-card-yellow-soft:#fff37f; /* MyZakaPay: brand yellow */
+  --color-surface:#f8f8f8;       /* image placeholder */
+  --color-nav-idle:rgba(135,135,135,.8); /* case-study side nav, inactive */
+
+  /* ---------- Font families ---------- */
+  --font-serif:"PP Mondwest",Georgia,serif;
+  --font-sans:Geist,system-ui,sans-serif;
+  --font-mono:"Geist Mono",ui-monospace,monospace;
+  --font-inter:Inter,var(--font-sans);
+  --font-pixel:"Press Start 2P",monospace;
+
+  /* ---------- Typography (Framer text styles) ----------
+     Each style: size · line-height · letter-spacing · paragraph-spacing · weight · case.
+     Desktop values here; tablet/phone overrides in the media queries below. */
+
+  /* Display — hero headline */
+  --display-size:96px;  --display-lh:96px;  --display-ls:-2px;   --display-weight:400;
+
+  /* Heading 1b — case-study title, stats (Mondwest) */
+  --h1b-size:44px;  --h1b-lh:46px;  --h1b-ls:-1.2px;  --h1b-ps:0px;  --h1b-weight:400;
+
+  /* Heading 2 — project titles (Mondwest) */
+  --h2-size:32px;  --h2-lh:1.4;  --h2-ls:-.3px;  --h2-ps:40px;  --h2-weight:400;
+
+  /* Heading 4 (Medium) 2 — case-study section titles (Mondwest) */
+  --h4-size:28px;  --h4-lh:1.4;  --h4-ls:-.4px;  --h4-ps:40px;  --h4-weight:400;
+
+  /* Heading 4 (Medium) — "and more…" (Inter) */
+  --h4i-size:24px;  --h4i-lh:1.4;  --h4i-ls:-1px;  --h4i-ps:40px;  --h4i-weight:500;
+
+  /* Heading 5 — labels, "Let's talk!" (Geist Mono, uppercase) */
+  --h5-size:18px;  --h5-lh:22px;  --h5-ls:0px;  --h5-ps:40px;  --h5-weight:400;  --h5-case:uppercase;
+
+  /* Heading 6 — detail values, sub-headings (Inter) */
+  --h6-size:16px;  --h6-lh:1.4;  --h6-ls:-.6px;  --h6-ps:40px;  --h6-weight:400;
+
+  /* Heading 6b — meta labels, numerals (Geist Mono, uppercase) */
+  --h6b-size:16px;  --h6b-lh:1.4;  --h6b-ls:0px;  --h6b-ps:40px;  --h6b-weight:400;  --h6b-case:uppercase;
+
+  /* Body — paragraphs (Geist) */
+  --body-size:14px;  --body-lh:1.4;  --body-ls:0px;  --body-ps:20px;  --body-weight:400;
+
+  /* Link / Link 2 — nav + arrow links (Geist Mono, uppercase) */
+  --link-size:16px;  --link-lh:20px;  --link-ls:.2px;  --link-weight:400;  --link-case:uppercase;
+
+  /* Game HUD (Press Start 2P) — [score, instructions, game over] */
+  --game-score:22px;  --game-hint:20px;  --game-over:26px;  --game-ls:-.01em;
+
+  /* ---------- Spacing & layout ---------- */
+  --page-pad:40px;           /* horizontal page gutter */
+  --nav-h:64px;
+  --section-pad-y:80px;
+  --project-gap:80px;        /* between projects */
+  --project-inner-gap:20px;  /* title ↔ image */
+  --column-gap:32px;
+  --content-max:1440px;
+  --sticky-top:88px;         /* sticky labels sit below the nav */
+  --radius-s:2px;
+  --radius-m:4px;
+
+  /* Component sizes */
+  --pixel-band-h:400px;      /* pixel scroll transition height */
+  --project-img-h:800px;
+  --game-pad:40px;
+
+  /* ---------- Motion (Framer transitions) ---------- */
+  --ease-spring:cubic-bezier(.2,.9,.3,1);       /* ≈ spring 500/60 */
+  --ease-framer:cubic-bezier(.44,0,.56,1);      /* Framer default tween */
+  --ease-menu:cubic-bezier(.6,-.07,.56,1);      /* phone menu */
+  --dur-hover:.35s;
+  --dur-appear:.5s;
+  --dur-menu:.5s;
+  --hover-opacity:.67;      /* links */
+}
+
+/* ---------- Tablet ---------- */
+@media (max-width:1199px){
+  :root{
+    --display-size:64px;
+    --h1b-size:32px;  --h1b-lh:36px;  --h1b-ls:-.4px;
+    --h2-size:24px;   --h2-ls:-.2px;
+    --h4-size:20px;
+    --h4i-size:20px;
+    --h5-size:16px;   --h5-ls:.2px;
+    --game-score:18px; --game-hint:16px; --game-over:22px;
+
+    --page-pad:32px;
+    --section-pad-y:64px;
+    --project-inner-gap:16px;
+    --column-gap:24px;
+    --pixel-band-h:240px;
+    --game-pad:32px;
+  }
+}
+
+/* ---------- Phone ---------- */
+@media (max-width:809px){
+  :root{
+    --display-size:48px;  --display-lh:52px;
+    --h1b-size:26px;  --h1b-lh:32px;
+    --h2-size:20px;   --h2-ls:-.1px;
+    --h4-size:16px;
+    --h4i-size:16px;
+    --h5-size:14px;   --h5-ls:0px;
+    --h6-size:14px;   --h6-ls:-.5px;
+    --h6b-size:14px;
+    --game-score:16px; --game-hint:12px; --game-over:18px;
+
+    --page-pad:20px;
+    --section-pad-y:48px;
+    --project-inner-gap:14px;
+    --column-gap:40px;
+    --pixel-band-h:200px;
+    --project-img-h:400px;
+    --game-pad:20px;
+  }
+}
+
+/* ==========================================================================
+   Text style classes — apply one per text element.
+   Paragraph spacing: wrap consecutive paragraphs in `.flow` (like one Framer
+   text block); each style sets --ps so the gap matches that style.
+   ========================================================================== */
+.t-display{font:var(--display-weight) var(--display-size)/var(--display-lh) var(--font-serif);letter-spacing:var(--display-ls)}
+.t-h1b{font:var(--h1b-weight) var(--h1b-size)/var(--h1b-lh) var(--font-serif);letter-spacing:var(--h1b-ls);--ps:var(--h1b-ps)}
+.t-h2{font:var(--h2-weight) var(--h2-size)/var(--h2-lh) var(--font-serif);letter-spacing:var(--h2-ls);--ps:var(--h2-ps)}
+.t-h4{font:var(--h4-weight) var(--h4-size)/var(--h4-lh) var(--font-serif);letter-spacing:var(--h4-ls);--ps:var(--h4-ps)}
+.t-h4i{font:var(--h4i-weight) var(--h4i-size)/var(--h4i-lh) var(--font-inter);letter-spacing:var(--h4i-ls);--ps:var(--h4i-ps)}
+.t-h5{font:var(--h5-weight) var(--h5-size)/var(--h5-lh) var(--font-mono);letter-spacing:var(--h5-ls);text-transform:var(--h5-case);--ps:var(--h5-ps)}
+.t-h6{font:var(--h6-weight) var(--h6-size)/var(--h6-lh) var(--font-inter);letter-spacing:var(--h6-ls);--ps:var(--h6-ps)}
+.t-h6b{font:var(--h6b-weight) var(--h6b-size)/var(--h6b-lh) var(--font-mono);letter-spacing:var(--h6b-ls);text-transform:var(--h6b-case);color:var(--color-gray-light);--ps:var(--h6b-ps)}
+.t-body{font:var(--body-weight) var(--body-size)/var(--body-lh) var(--font-sans);letter-spacing:var(--body-ls);color:var(--color-gray);--ps:var(--body-ps)}
+.t-link{font:var(--link-weight) var(--link-size)/var(--link-lh) var(--font-mono);letter-spacing:var(--link-ls);text-transform:var(--link-case)}
+
+.flow>*+*{margin-top:var(--ps,1em)}

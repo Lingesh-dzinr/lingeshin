@@ -1,0 +1,203 @@
+/* Layout & components. All colors, type, spacing and motion come from foundations.css. */
+@import "./styles/foundations.css";
+
+*{box-sizing:border-box;margin:0;padding:0}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{font:var(--body-weight) var(--body-size)/var(--body-lh) var(--font-sans);color:var(--color-black);background:var(--color-white);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+
+/* ---------- links (Framer "Link" / "Link 2") ---------- */
+.link2,.link{color:var(--color-orange);display:inline-flex;align-items:center;gap:6px;transition:opacity var(--dur-hover) var(--ease-spring)}
+.link2:hover,.link:hover{opacity:var(--hover-opacity)}
+.link svg{width:14px;height:14px;stroke:var(--color-black);transform:rotate(45deg);transition:transform var(--dur-hover) var(--ease-spring)}
+.link:hover svg{transform:rotate(0)}
+.link.on-dark{color:var(--color-white)}
+.link.on-dark svg{stroke:var(--color-white)}
+
+/* ---------- navbar ---------- */
+.nav{position:fixed;inset:0 0 auto;z-index:10;height:var(--nav-h);padding:24px var(--page-pad);
+  display:flex;align-items:center;justify-content:space-between}
+.nav .items{display:flex;align-items:center;gap:32px}
+.nav .dim{opacity:.5}
+.nav .toggle{display:none}
+@media (max-width:1199px){.nav .items{gap:20px}}
+@media (max-width:809px){
+  .nav{flex-direction:column;align-items:stretch;justify-content:flex-start;padding:0 var(--page-pad);overflow:hidden;
+    transition:height var(--dur-menu) var(--ease-menu),background var(--dur-menu)}
+  .nav .bar{height:var(--nav-h);flex:none;display:flex;align-items:center;justify-content:space-between}
+  .nav .toggle{display:block;width:32px;height:32px;position:relative;background:none;border:0;cursor:pointer}
+  .nav .toggle i{position:absolute;left:6px;right:6px;height:2px;background:var(--color-black);transition:transform .3s,top .3s}
+  .nav .toggle i:first-child{top:12px}.nav .toggle i:last-child{top:19px}
+  .nav .items{flex-direction:column;align-items:flex-start;gap:24px;padding-bottom:40px;opacity:0;transition:opacity .3s}
+  .nav.open{height:var(--open-h,300px);background:var(--color-white)}
+  .nav.open .items{opacity:1}
+  .nav.open .toggle i:first-child{top:15px;transform:rotate(45deg)}
+  .nav.open .toggle i:last-child{top:15px;transform:rotate(-45deg)}
+}
+@media (min-width:810px){.nav .bar{display:contents}}
+/* adaptive ink (white copy shown only over [data-nav-dark] sections) */
+.nav-ink{position:absolute;inset:0;display:inherit;flex-direction:inherit;align-items:inherit;justify-content:inherit;padding:inherit;pointer-events:none;clip-path:inset(100% 0 0 0)}
+.nav-ink .link2,.nav-ink .link{color:var(--color-white)}
+.nav-ink .link svg{stroke:var(--color-white)}
+.nav-ink .toggle i{background:var(--color-white)}
+.nav-ink-sky{clip-path:none;-webkit-mask:linear-gradient(transparent,transparent);mask:linear-gradient(transparent,transparent);-webkit-mask-size:100% 100%;mask-size:100% 100%}
+.nav.open .nav-ink{display:none}
+
+/* ---------- reveal (Framer appear effects) ---------- */
+.reveal{opacity:0;transition:opacity var(--dur-appear) var(--ease-framer)}
+.reveal.in{opacity:1}
+
+/* ---------- home: hero ---------- */
+/* the hero stays pinned for the whole stage: .hero-scrub (one screen) drives the text + sky fill,
+   then the work cards scroll up over it */
+.hero-stage{position:relative;background:var(--color-hero)}
+.hero-sticky{position:sticky;top:0;height:max(100vh,640px);overflow:hidden;z-index:0}
+.hero-scrub{height:100vh}
+.hero{position:relative;height:100%;padding:96px 0 64px;display:flex}
+.hero-sky{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero-in{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 var(--page-pad)}
+.hero-block{display:flex;flex-direction:column;align-items:center;text-align:center}
+.hero-copy{position:relative;width:min(100%,760px);display:flex;flex-direction:column;align-items:center;gap:32px}
+/* Word reveal (andreas.vision): a pixel mark pops beside each word while the word steps in from
+   35% → 65% → 100%. The intro plays it backwards to leave and forwards to come back; "Selected work"
+   plays it forwards to arrive. Words follow one another 80ms apart (--i). */
+.hero-intro .word,.hero-work .word{display:inline-block;position:relative;--at:calc(var(--i) * 80ms)}
+.hero-intro .text,.hero-work .text{display:inline-block;transform-origin:var(--ox) var(--oy)}
+.hero-intro .mark,.hero-work .mark{position:absolute;width:.16em;height:.16em;background:currentcolor;opacity:0;transform-origin:var(--mx) var(--oy)}
+/* direction per word (data-side / data-v from HeroCopy.jsx): the mark sits inside the word at that
+   corner and the word grows out of it — kept inside the word's own box so it never reaches a neighbour */
+.hero-copy .word[data-side=left]{--dir:-1;--ox:left;--mx:left}
+.hero-copy .word[data-side=left] .mark{left:0}
+.hero-copy .word[data-side=right]{--dir:1;--ox:right;--mx:right}
+.hero-copy .word[data-side=right] .mark{right:0}
+.hero-copy .word[data-v=bottom]{--oy:bottom}
+.hero-copy .word[data-v=bottom] .mark{bottom:.08em}
+.hero-copy .word[data-v=top]{--oy:top}
+.hero-copy .word[data-v=top] .mark{top:.18em}
+/* intro: leave (reverse) / return (forward) */
+.intro-out .hero-intro .text{animation:word-text-out .5s step-end var(--at) both,word-drift-out .25s cubic-bezier(.22,1,.36,1) var(--at) both}
+.intro-out .hero-intro .mark{animation:word-mark-out .5s step-end var(--at) both}
+.intro-in .hero-intro .text{animation:word-text .5s step-end var(--at) both,word-drift .25s cubic-bezier(.22,1,.36,1) calc(var(--at) + .275s) both}
+.intro-in .hero-intro .mark{animation:word-mark .5s step-end var(--at) both}
+/* "sense" stays behind in its place while the others leave, then leaves last with the same reverse
+   reveal; on return it reveals first */
+.intro-out .hero-intro .word.is-sense{--at:1s}
+.intro-in .hero-intro .word.is-sense{--at:0s}
+.intro-out .meta{animation:meta-out .5s step-end calc(var(--i) * 80ms) both}
+.intro-in .meta{animation:meta-in .5s step-end calc(var(--i) * 80ms) both}
+/* "Selected work": arrive */
+.hero-work{position:absolute;inset:0;margin:0;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;color:var(--color-white);pointer-events:none}
+.hero-work .text{opacity:0}
+.hero-work.on .text{animation:word-text .5s step-end var(--at) both,word-drift .25s cubic-bezier(.22,1,.36,1) calc(var(--at) + .275s) both}
+.hero-work.on .mark{animation:word-mark .5s step-end var(--at) both}
+@keyframes word-mark{0%{opacity:0;scale:1}1%{opacity:1;scale:1}15%{scale:1.5}30%{scale:2}55%{opacity:0;scale:0}100%{opacity:0}}
+@keyframes word-text{0%{opacity:0;scale:.35}30%{opacity:1;scale:.35}45%{scale:.65}55%,100%{opacity:1;scale:1}}
+@keyframes word-drift{0%{translate:calc(var(--dir) * .08em) 0}100%{translate:0}}
+/* the same three, mirrored in time */
+@keyframes word-mark-out{0%{opacity:0;scale:0}45%{opacity:1;scale:2}70%{scale:1.5}85%{scale:1}99%{opacity:1;scale:1}100%{opacity:0}}
+@keyframes word-text-out{0%{opacity:1;scale:1}45%{scale:.65}70%{opacity:1;scale:.35}100%{opacity:0;scale:.35}}
+@keyframes word-drift-out{0%{translate:0}100%{translate:calc(var(--dir) * .08em) 0}}
+@keyframes meta-out{0%{opacity:1;translate:0}45%{opacity:.65;translate:0 -.1em}70%{opacity:.35;translate:0 -.2em}100%{opacity:0;translate:0 -.25em}}
+@keyframes meta-in{0%{opacity:0;translate:0 -.25em}30%{opacity:.35;translate:0 -.2em}55%{opacity:.65;translate:0 -.1em}100%{opacity:1;translate:0}}
+@media (prefers-reduced-motion:reduce){
+  .hero-work.on .text{animation:none;opacity:1}.hero-work.on .mark,.intro-in .hero-intro *,.intro-in .meta{animation:none}
+  .intro-out .hero-intro .text,.intro-out .meta{animation:none;opacity:0}.intro-out .hero-intro .mark{animation:none}
+}
+.hero h1 em{color:var(--color-orange);position:relative}
+/* spider-sense: the original vector over "sense", sized in em so it scales with the headline.
+   Hidden until hover; then each ray shoots out and its squiggle crawls outward (per-ray wave filters in SenseWord.jsx). */
+.sense-word{cursor:default}
+.sense{position:absolute;left:50%;top:-.66em;width:2.2em;height:.83em;transform:translateX(-44%) rotate(2deg);pointer-events:none}
+.sense svg{display:block;width:100%;height:100%;overflow:visible}
+.sense path{transform-box:view-box;transform-origin:50% 100%;opacity:0;transform:scale(.15)}
+.sense-word.on .sense path{animation:sense-in .3s var(--ease-spring) var(--reveal-delay,0s) both}
+@keyframes sense-in{0%{opacity:0;transform:scale(.15)}60%{opacity:1;transform:scale(1.12)}100%{opacity:1;transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.sense-word.on .sense path{animation:none;opacity:1;transform:none}}
+.hero .meta{display:flex;justify-content:center;gap:48px}
+.hero .meta p{max-width:300px;color:var(--color-black)}
+@media (max-width:1199px){
+  .hero h1{max-width:600px}
+}
+@media (max-width:809px){
+  .hero{padding:88px 0 48px}
+  .hero h1{max-width:350px}
+  .hero .meta{flex-direction:column;align-items:center;gap:16px}
+}
+
+/* ---------- pixel transition ---------- */
+.pixels{display:block;width:100%;height:var(--pixel-band-h)}
+
+/* ---------- home: work cards (scroll up over the pinned blue hero and on past) ---------- */
+.work-cards{position:relative;z-index:1;display:flex;flex-direction:column;gap:24vh;padding:0 var(--page-pad) 30vh}
+.work-card{width:min(100%,720px);display:flex;flex-direction:column;background:var(--color-white)}
+.work-card h2{padding:32px 32px 24px}  /* only the title is padded — the art box is flush with the card's left, right and bottom */
+.work-card[data-pos=left]{align-self:flex-start}
+.work-card[data-pos=right]{align-self:flex-end}
+.work-card[data-pos=center]{align-self:center}
+.work-card .art{position:relative;aspect-ratio:5/4;overflow:hidden;background:var(--color-white)}
+.pixel-cloud{position:absolute;inset:0;width:100%;height:100%}
+/* the mockup sits inset from the top-left, bleeding off the right and bottom, clouds around it */
+.work-card .img{position:absolute;left:10%;top:18%;width:90%;height:82%;object-fit:cover;object-position:left top}
+@media (max-width:809px){.work-card h2{padding:20px 20px 16px}.work-card[data-pos]{align-self:stretch;width:100%}}
+
+/* ---------- footer ---------- */
+.footer{background:var(--color-orange);color:var(--color-white);overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:32px}
+.footer .title{width:100%;max-width:var(--content-max);display:flex;gap:var(--column-gap);padding:var(--page-pad)}
+.footer .roles{width:22.857%}
+.footer .exp{flex:1;display:flex;flex-direction:column;gap:40px}
+.footer .exp p{width:77%;color:var(--color-peach)}
+.footer .links{display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.shooter{width:100%;max-width:var(--content-max);height:100vh;position:relative;overflow:hidden;user-select:none;touch-action:none;
+  background:var(--color-orange);padding:var(--game-pad)}
+.shooter canvas{width:100%;height:100%;image-rendering:pixelated}
+.shooter .hud{position:absolute;left:var(--game-pad);color:var(--color-white);font-family:var(--font-pixel);letter-spacing:var(--game-ls);line-height:1}
+.shooter .score{top:var(--game-pad);font-size:var(--game-score)}
+.shooter .hint{bottom:var(--game-pad);font-size:var(--game-hint)}
+@media (max-width:1199px){.footer .roles{width:25%}.footer .exp p{width:100%}}
+@media (max-width:809px){
+  .footer .title{flex-direction:column;gap:6px;padding:24px var(--page-pad)}.footer .roles{width:100%}.footer .exp{gap:44px}
+}
+
+/* ---------- case study ---------- */
+.cs-head{padding:144px var(--page-pad) var(--section-pad-y);max-width:var(--content-max);display:flex;flex-direction:column;gap:80px;margin-bottom:40px}
+.cs-head h1{width:74.2857%}
+.cs-details{width:74%;display:flex;gap:32px}
+.cs-details>div{flex:1;display:flex;flex-direction:column;gap:12px}
+.cs-details .t-h6{white-space:pre-line}
+.cs-hero{width:74%;height:var(--project-img-h);background:var(--color-surface)}
+.cs-hero img{width:100%;height:100%;object-fit:cover}
+.cs-body{display:flex;gap:32px;padding:var(--section-pad-y) var(--page-pad);max-width:var(--content-max)}
+.vnav{width:22.857%;position:sticky;top:96px;align-self:flex-start;display:flex;flex-direction:column;gap:12px}
+.vnav a{display:flex;align-items:center;gap:10px;color:var(--color-nav-idle);transition:color .4s var(--ease-spring),gap .4s var(--ease-spring)}
+.vnav a::before{content:"";width:8px;height:8px;background:var(--color-orange);display:none}
+.vnav a:hover{color:var(--color-black)}
+.vnav a.active{color:var(--color-black);gap:8px}
+.vnav a.active::before{display:block}
+.cs-content{width:48.5%;display:flex;flex-direction:column;gap:80px}
+.cs-section{display:flex;flex-direction:column;gap:16px;scroll-margin-top:96px}
+.cs-section h2{width:77%;color:var(--color-black)}
+.stack{display:flex;flex-direction:column}
+.sub{color:var(--color-gray-light)}
+.list{display:flex;flex-direction:column;gap:32px;padding:4px}
+.list li{display:flex;gap:12px}
+.list .n{width:6%;flex:none;color:var(--color-blue)}
+.list.tight .n{width:4%}
+.embed{width:100%;height:450px;border:0}
+.shot{width:100%;object-fit:cover;border-radius:var(--radius-m)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;padding:16px 0}
+.stats>div{display:flex;flex-direction:column;gap:10px}
+.stats .up{color:var(--color-green)}
+.stats .t-body{color:var(--color-black)}
+.thanks{color:var(--color-gray-light)}
+@media (max-width:1199px){.cs-head h1,.cs-details,.cs-hero{width:100%}.cs-hero{height:560px}}
+@media (max-width:809px){
+  .cs-head{padding-top:104px;gap:48px}.cs-details{flex-wrap:wrap;gap:24px}.cs-details>div{flex:1 1 40%}
+  .cs-hero{height:320px}.cs-body{flex-direction:column}.vnav{display:none}
+  .cs-content{width:100%}.stats{grid-template-columns:1fr}.list .n,.list.tight .n{width:28px}
+}
+
+/* ---------- about ---------- */
+.about{min-height:100vh;display:flex;align-items:center;padding:144px var(--page-pad) 80px;background:var(--color-hero)}

@@ -1,0 +1,35 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "geist",
+        "createdAt": "2026-10-23T17:30:40.618Z",
+        "reason": "Claude: faithful port of user's Framer site, which uses Geist"
+      },
+      {
+        "rule": "overused-font",
+        "value": "geist mono",
+        "createdAt": "2026-10-23T17:30:41.002Z",
+        "reason": "Claude: faithful port of user's Framer site, which uses Geist Mono"
+      },
+      {
+        "rule": "layout-transition",
+        "value": "*",
+        "files": [
+          "src/index.css"
+        ],
+        "createdAt": "2026-10-23T17:47:28.488Z",
+        "reason": "Claude: phone menu height tween mirrors the Framer Navbar 'Phone Open' variant; one fixed element, runs only on toggle"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "var(--ease-spring)",
+        "createdAt": "2026-10-23T20:24:13.617Z",
+        "reason": "Claude: --ease-spring mirrors the Framer spring transitions; the spider-sense overshoot is the intended burst"
+      }
+    ]
+  }
+}
